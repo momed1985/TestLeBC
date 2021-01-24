@@ -1,0 +1,2 @@
+SELECT Id, EndDate, (SELECT Id, SBQQ__EndDate__c, SBQQ__TerminatedDate__c, SBQQ__Contract__c 
+                                              FROM SBQQ__Subscriptions__r) FROM Contract
