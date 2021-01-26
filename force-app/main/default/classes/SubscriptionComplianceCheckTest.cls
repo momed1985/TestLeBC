@@ -19,11 +19,11 @@ private class SubscriptionComplianceCheckTest {
     private static final String UBIFLOW = 'Ubiflow';
     private static final String ELEMENTS_MANQUANTS = 'Éléments manquants';
     
-    @isTest
+    @isTest(seeAllData = false)
     private static void testConformite() {
         User userTest = new User(
             ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id,
-            //BypassTrigger__c = true,
+            BypassTrigger__c = true,
             Username = 'Test@Test.fr'+System.currentTimeMillis(),
             LastName = 'LIVESTON',
             FirstName='JASON',
@@ -39,16 +39,16 @@ private class SubscriptionComplianceCheckTest {
         insert userTest ;
         System.runAs(userTest){
         Account compte = Account_DataFactory.createAccount('compte_1', '+33 6 00 00 00 00', '37915832200097');
-        //compte.Segmentation__c = SSII;
-        //compte.CompanyIndustry__c = 'Beauty';
-        /*compte.BillingCountry = 'France';
+        compte.Segmentation__c = SSII;
+        compte.CompanyIndustry__c = 'Beauty';
+        compte.BillingCountry = 'France';
         compte.BillingCity = 'city';
         compte.BillingState = 'Île-de-France';
         compte.BillingPostalCode = '93600';
         compte.BillingStreet = 'street';
-        UPDATE compte;*/
+        UPDATE compte;
         Acces_beneficiaire__c benef1 = AccesBeneficiaire_DataFactory.createBeneficiaire('benef_1', compte.Id, 'test1@lbc.fr', CREATED);
-        /*benef1.AccessUserId__c = 'OUAH';
+        benef1.AccessUserId__c = 'OUAH';
         benef1.AccessStoreId__c = 'OUAH';
         benef1.AccessCategory__c = MODE;
         benef1.Segmentation__c = SSII;
@@ -60,41 +60,48 @@ private class SubscriptionComplianceCheckTest {
         benef1.AccessAddressCountry__c = 'FR';
         benef1.AccessAddressCity__c = 'city';
         benef1.AccessAddressZipcode__c = '22000';
-        UPDATE benef1;*/
+        UPDATE benef1;
         List<SBQQ__Subscription__c> subs = new List<SBQQ__Subscription__c>();
         SBQQ__Subscription__c parent = new SBQQ__Subscription__c(
-            SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, 
+            SBQQ__Quantity__c =5 ,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, 
             ComplianceProcess__c = PARENT_BUNDLE);
         INSERT parent;
         SBQQ__Subscription__c immo = new SBQQ__Subscription__c(
-            SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = IMMO_NEUF, /*LeadPhone__c = '+33 6 00 00 00 66',
-			ProductWorkflow__c = 'yeah' ,*/ BeneficiaryAccess__c = benef1.Id/*, FlowType__c = MANUEL*/);
+            SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = IMMO_NEUF, LeadPhone__c = '+33 6 00 00 00 66',
+			ProductWorkflow__c = 'yeah' , BeneficiaryAccess__c = benef1.Id, FlowType__c = MANUEL);
         INSERT immo;
-        /*immo.PromoterDescription__c = 'UBIFLOW4';
-        UPDATE immo;*/
-        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = BOUTIQUE, 
-                                           /*ProductWorkflow__c = 'yeah',*/ BeneficiaryAccess__c = benef1.Id, /*FlowType__c = 'Manuel',*/ BeneficiaryAccount__c = compte.Id));
-        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = DIFFUSION_LBC, 
-                                             /*ProductWorkflow__c = 'yeah',*/ BeneficiaryAccess__c = benef1.Id, BeneficiaryAccount__c = compte.Id
-                                          /* BroadcastSoftware__c = CLOVER, BroadcastPartner__c = UBIFLOW, FlowType__c = 'Manuel'*/));
-        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = DIFFUSION_AVAL /*FlowType__c = 'Manuel',
-                                             ProductWorkflow__c = 'yeah'*/, BeneficiaryAccess__c = benef1.Id, BeneficiaryAccount__c = compte.Id));
-        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = VISIBILITE_AVAL,/* FlowType__c = 'Manuel',
-                                            /* ProductWorkflow__c = 'yeah',*/ BeneficiaryAccess__c = benef1.Id, SBQQ__RequiredById__c = parent.Id, BeneficiaryAccount__c = compte.Id));
-        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = CREDIT, /*FlowType__c = 'Manuel',
-                                             ProductWorkflow__c = 'yeah',*/BeneficiaryAccess__c = benef1.Id, BeneficiaryAccount__c = compte.Id));
-        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = PUB_LOCAL /*OrderNumber__c = '00215',
-                                             PostalCode__c = 7500, KilometerRadius__c = '50', PrintVolume__c = 25*/));
+        immo.PromoterDescription__c = 'UBIFLOW4';
+        UPDATE immo;
+        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = BOUTIQUE, 
+                                           ProductWorkflow__c = 'yeah', BeneficiaryAccess__c = benef1.Id, FlowType__c = 'Manuel', BeneficiaryAccount__c = compte.Id));
+        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = DIFFUSION_LBC, 
+                                             ProductWorkflow__c = 'yeah', BeneficiaryAccess__c = benef1.Id, BeneficiaryAccount__c = compte.Id,
+                                          BroadcastSoftware__c = CLOVER, BroadcastPartner__c = UBIFLOW, FlowType__c = 'Manuel'));
+        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = DIFFUSION_AVAL ,FlowType__c = 'Manuel',
+                                             ProductWorkflow__c = 'yeah', BeneficiaryAccess__c = benef1.Id, BeneficiaryAccount__c = compte.Id));
+        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = VISIBILITE_AVAL, FlowType__c = 'Manuel',
+                                             ProductWorkflow__c = 'yeah', BeneficiaryAccess__c = benef1.Id, SBQQ__RequiredById__c = parent.Id, BeneficiaryAccount__c = compte.Id));
+        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = CREDIT, FlowType__c = 'Manuel',
+                                             ProductWorkflow__c = 'yeah',BeneficiaryAccess__c = benef1.Id, BeneficiaryAccount__c = compte.Id));
+        subs.add(new SBQQ__Subscription__c(SBQQ__Quantity__c = 5,Souscription_Conforme__c = false, Status__c = ELEMENTS_MANQUANTS, ComplianceProcess__c = PUB_LOCAL , OrderNumber__c = '00215',
+                                             PostalCode__c = 7500, KilometerRadius__c = '50', PrintVolume__c = 25));
         INSERT subs;
-        
-        
-        
-        Test.startTest();
+           
+        Test.startTest();      
         SubscriptionComplianceCheck batch = new SubscriptionComplianceCheck();
-		Database.executeBatch(batch);
-		Test.stopTest();
-        
-        System.assertNotEquals(0, [SELECT Id FROM SBQQ__Subscription__c WHERE Souscription_Conforme__c = true].size());
+		Database.executeBatch(batch);  
+		Test.stopTest();       
+            
+        integer numberOfTrueSubsConfome =[SELECT count() 
+                                            FROM SBQQ__Subscription__c 
+                                           WHERE Status__c = :ELEMENTS_MANQUANTS  
+                                          	 AND Souscription_Conforme__c = true 
+                                             AND ComplianceProcess__c = :IMMO_NEUF];
+
+        System.debug('nbr = ' +numberOfTrueSubsConfome);
+           
+        System.assertEquals(1 , numberOfTrueSubsConfome);
+            
         }
     }
 }
