@@ -89,13 +89,13 @@ private class SubscriptionComplianceCheckTest {
            
         Test.startTest();      
         SubscriptionComplianceCheck batch = new SubscriptionComplianceCheck();
-		Database.executeBatch(batch);  
-		Test.stopTest();       
+	Database.executeBatch(batch);  
+	Test.stopTest();       
             
         integer numberOfTrueSubsConfome =[SELECT count() 
                                             FROM SBQQ__Subscription__c 
                                            WHERE Status__c = :ELEMENTS_MANQUANTS  
-                                          	 AND Souscription_Conforme__c = true 
+                                             AND Souscription_Conforme__c = true 
                                              AND ComplianceProcess__c = :IMMO_NEUF];
 
         System.debug('nbr = ' +numberOfTrueSubsConfome);
