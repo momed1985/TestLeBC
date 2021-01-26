@@ -4,9 +4,9 @@ trigger ContractEndDateAdapterTrigger on SBQQ__Subscription__c (after insert, af
     Date terminatedDate;
     Date endDate;
    
-    //List<SBQQ__Subscription__c> sub=[SELECT SBQQ__Contract__c FROM SBQQ__Subscription__c where id IN :Trigger.new];
+    List<SBQQ__Subscription__c> sub=[SELECT SBQQ__Contract__c FROM SBQQ__Subscription__c where id IN :Trigger.new];
      Set<Id> cons = new Set<Id>();
-    for (SBQQ__Subscription__c sub :Trigger.new) {
+    for (SBQQ__Subscription__c sub :sub) {
        cons.add(sub.SBQQ__Contract__c);
     }
     try {
@@ -43,32 +43,7 @@ trigger ContractEndDateAdapterTrigger on SBQQ__Subscription__c (after insert, af
        
         
     } catch(Exception e) {
-           // Logs.error('ContractEndDateAdapterTrigger','SBQQ__Subscription__c Trigger insert & update', e);
+           Logs.error('ContractEndDateAdapterTrigger','SBQQ__Subscription__c Trigger insert & update', e);
     }
 }
 
-
-
-
-
-
-
-/*trigger ContractEndDateAdapterTrigger on SBQQ__Sbscription__c (
-        before insert, 
-        before update, 
-        before delete, 
-        after insert, 
-        after update, 
-        after delete, 
-        after undelete) 
-    {
-        if (Trigger.isAfter) 
-            if (Trigger.isUpdate && Trigger.isInsert)
-                // Sort the owners based on total revenue of Accounts
-                SubscriptionsUtils.sortOwners(Trigger.old,Trigger.new);
-        else if (Trigger.isBefore) 
-        {
-            // After events may go here later
-        }
-    }
-}*/
