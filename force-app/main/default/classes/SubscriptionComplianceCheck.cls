@@ -4,7 +4,6 @@ global class SubscriptionComplianceCheck implements Database.Batchable<sObject> 
     
     
     global Database.QueryLocator start(Database.BatchableContext cnx) { 
-        System.debug('level start 1');
         return Database.getQueryLocator([SELECT Id,  
                                                 SBQQ__RequiredById__c, 
                                                 Souscription_Conforme__c, 
@@ -16,7 +15,7 @@ global class SubscriptionComplianceCheck implements Database.Batchable<sObject> 
     }
     
     global void execute(Database.BatchableContext cnx, List<SBQQ__Subscription__c> scope) {
-        system.debug('  step 001 ');
+        
         
 
         try {
@@ -34,9 +33,8 @@ global class SubscriptionComplianceCheck implements Database.Batchable<sObject> 
                 }
             }
             system.debug('subs.size() = '+subs.size());
-            system.debug('  step 1 ');
             if(subs.size() > 0)
-            Immosubs = setConformiteImmoNeuf(subs);
+                Immosubs = setConformiteImmoNeuf(subs);
             for(SBQQ__Subscription__c  subIm : Immosubs){
                 if(subIm != null){
                     if (subIm.SBQQ__RequiredById__c != null) {
@@ -46,7 +44,7 @@ global class SubscriptionComplianceCheck implements Database.Batchable<sObject> 
             }
             setParentConforme(IdSubImReqById);
         } catch(Exception e) {
-          // Logs.error('SubscriptionComplianceCheck','Batch Compliance Check', e);
+            Logs.error('SubscriptionComplianceCheck','Batch Compliance Check', e);
           System.debug('error');
         }
     }
@@ -77,12 +75,12 @@ global class SubscriptionComplianceCheck implements Database.Batchable<sObject> 
         List<SBQQ__Subscription__c> parentSub = [SELECT Id, Souscription_Conforme__c 
                                                    FROM SBQQ__Subscription__c 
                                                   WHERE Status__c = :ELEMENTS_MANQUANTS 
-                                                  AND Souscription_Conforme__c = false 
-                                                  AND Id IN :parentId
+                                                    AND Souscription_Conforme__c = false 
+                                                    AND Id IN :parentId
                                                 ];
-         system.debug('  step 3 ');
+        
         for(SBQQ__Subscription__c sub : parentSub){
-            sub.Souscription_Conforme__c = true;
+                 sub.Souscription_Conforme__c = true;
             parentSubToUpdate.add(sub);      
         }
 
