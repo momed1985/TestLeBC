@@ -4,8 +4,8 @@ trigger ContractEndDateAdapterTrigger on SBQQ__Subscription__c (after insert, af
     Date terminatedDate;
     Date endDate;
    
-    List<SBQQ__Subscription__c> sub=[SELECT SBQQ__Contract__c FROM SBQQ__Subscription__c where id IN :Trigger.new];
-     Set<Id> cons = new Set<Id>();
+    List<SBQQ__Subscription__c> sub=[SELECT Id ,SBQQ__Contract__c FROM SBQQ__Subscription__c where id IN :Trigger.new];
+    Set<Id> cons = new Set<Id>();
     for (SBQQ__Subscription__c sub :sub) {
        cons.add(sub.SBQQ__Contract__c);
     }
@@ -39,11 +39,18 @@ trigger ContractEndDateAdapterTrigger on SBQQ__Subscription__c (after insert, af
             conts.add(con);
         }
         
-        UPDATE conts;
+        if (conts.siz()>0)
+            UPDATE conts;
        
         
     } catch(Exception e) {
-           Logs.error('ContractEndDateAdapterTrigger','SBQQ__Subscription__c Trigger insert & update', e);
+            Logs.error('ContractEndDateAdapterTrigger','SBQQ__Subscription__c Trigger insert & update', e);
     }
 }
+
+
+
+
+
+
 
